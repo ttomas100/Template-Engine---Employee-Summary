@@ -9,42 +9,98 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const Choices = require("inquirer/lib/objects/choices");
 
-const collaborators = []
-const collaboratorID = []
+const collaborators = [];
+const collaboratorID = [];
 
 const questionary = [
     {
         type: "input",
-        name: : "managerName",
+        name: "managerName",
         message: "Please, type here the manager's name"
-    }
+    },
     {
         type: "input",
         name: "managerId",
         message: "Please, type here the the manager's ID"
-    }
+    },
     {
         type: "input",
         name: "managerEmail",
         message: "Please, type here the manager's email address"
-    }
+    },
     {
         type: "input",
-        name: "officeNumer",
+        name: "officeNumber",
         message: "Please, type here the office phone number"
     }
 ];
 
-function manager(){
+
+function manager() {
     console.log("Is time to build your team!");
     inquirer.prompt(questionary).then(function(data){
-        const manager = new Manager(data.managerName, data.managerId, data.managerName, data.officeNumer);
+        const manager = new Manager(data.managerName, data.managerId, data.managerEmail, data.officeNumber);
         collaborators.push(manager);
-        collaboratorID.push(data.managerId)
+        collaboratorID.push(data.managerId);
         team();
-    })
+    });
 };
+
+function team() {
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "teamMembers",
+            message: "What is the position that you want to fill?",
+            choices: [
+                "Engineer",
+                "Intern",
+                "no more team members today."
+            ]
+        }
+    ]).then(function(data){
+        if (data.teamMembers === "Engineer"){
+            engineer();
+        } else if (data.teamMembers === "Intern"){
+            intern();
+        } else (outputTeam());
+    });
+};
+
+function engineer() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name:"engineerName",
+            message: "Please, type here the name of the engineer?"
+        },
+        {
+            type: "input",
+            name:"engineerId",
+            message: "Please, type here the engineer's ID"
+        },
+        {
+            type: "input",
+            name: "engineerEmail",
+            message: "Please, type here the engineer's email"
+        },
+        {
+            type: "input",
+            name: "engineerGithub",
+            message: "Please, type here the GitHub username of the engineer"
+        }
+    ]). then(function(data){
+        const engineer = new Engineer(data.engineerName, data.engineerId, data.engineerEmail, data.engineerGithub);
+        collaborators.push(engineer);
+        collaboratorID.push(data.engineerId);
+        team();
+    });
+};
+
+
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
