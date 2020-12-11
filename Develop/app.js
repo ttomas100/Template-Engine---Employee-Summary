@@ -99,7 +99,44 @@ function engineer() {
     });
 };
 
+function intern() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "internName",
+            message: "Please, type here the name of the inter"
+        },
+        {
+            type: "input",
+            name: "internId",
+            message: "Please, type here the inter's ID"
+        },
+        {
+            type: "input",
+            name: "internEmail",
+            message: "Please, type here the inter's email address"
+        },
+        {
+            type: "input",
+            name: "internSchool",
+            message: "Please, type the intern's School Name"
+        }
+    ]). then(function(data){
+        const intern = new Intern(data.internName, data.internId, data.internEmail, data.internSchool);
+        collaborators.push(intern);
+        collaboratorID.push(data.internId);
+        team();
+    });
+};
 
+function outputTeam() {
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR)
+    }
+    fs.writeFileSync(outputPath, render(collaborators), "utf-8");
+}
+
+manager();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
